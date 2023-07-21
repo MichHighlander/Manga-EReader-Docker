@@ -5,10 +5,11 @@ WORKDIR /app
 
 # Copy your Python script into the container
 COPY kcc-master/ /app/kcc/
-COPY testmobi.zip /app/input/
 COPY kindlegen /app/
 COPY index.py /app/
+COPY base_options.json /app/options.json
 
+RUN mkdir input
 #Installing KindleGen
 RUN mv kindlegen /usr/local/bin/
 
@@ -28,5 +29,5 @@ RUN pip install  --use-pep517 mozjpeg-lossless-optimization>=1.1.2
 #installing requirements
 RUN pip install -r /app/kcc/requirements.txt
 
-CMD python ./kcc/kcc-c2e.py -p K1 ./input/testmobi.zip
-# CMD python index.py
+# CMD python ./kcc/kcc-c2e.py -p K1 ./input/input.zip
+CMD python index.py
