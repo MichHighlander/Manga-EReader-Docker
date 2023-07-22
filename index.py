@@ -94,40 +94,103 @@ def zip_folders(parent_folder_path: str):
     else:
         raise Exception("No parent folder")
 
-def run_kcc_script_on_input(parent_folder):
+def run_kcc_script_on_input(parent_folder, config: dict):
     if os.path.exists(parent_folder):
         # Get a list of all items (files and subfolders) in the parent folder
         items_in_parent_folder = os.listdir(parent_folder)
         
+        command = get_kcc_command_from_config(config)
         # Loop through the items in the parent folder
         for item in items_in_parent_folder:
             if is_zip_file(item):
                 print("item",item)
-                run_kcc_script(item)
+                run_kcc_script(item, command)
     else:
         raise Exception("No parent folder")
       
-def run_kcc_script(item):
+def run_kcc_script(item, command: list):
     # Replace 'python_script_to_run.py' with the name of the script you want to run
-    script_to_run = './kcc/kcc-c2e.py'
+    # script_to_run = './kcc/kcc-c2e.py'
+    command_and_item = command.copy()
+    command_and_item.append("./input/" + item)
     try:
-        subprocess.run(['python',script_to_run,"-p","K1","./input/" + item])
+        subprocess.run(command_and_item)
     except subprocess.CalledProcessError as e:
         print("Error occurred while running the script:", e)
 
 def is_zip_file(file_path):
     return file_path.endswith('.zip')
 
+def get_kcc_command_from_config(config: dict):
+    command = ['python','./kcc/kcc-c2e.py']
+    if 'kccOptions' in config:
+       for key in config['kccOptions']:
+        if config['kccOptions'][key] is not False and config['kccOptions'][key] is not None:
+            command.append(key)
+            if config['kccOptions'][key] is not True:
+                command.append(config['kccOptions'][key])
+    return command
+
+def rename_folders(parent_folder_path: str, prefix: str):
+    # Check if the parent folder exists
+    if os.path.exists(parent_folder_path):
+        # Get a list of all items (files and subfolders) in the parent folder
+        if are_there_sub_folders(parent_folder_path) is True:
+            items_in_parent_folder = os.listdir(parent_folder_path)
+            
+            # Loop through the items in the parent folder
+            for item in items_in_parent_folder:
+                item_path = os.path.join(parent_folder_path, item)
+                if os.path.isdir(item_path):
+                    # Replace 'prefix_' with the prefix you want to add to each subfolder
+                    new_folder_name = prefix + item
+                    new_item_path = os.path.join(parent_folder_path, new_folder_name)
+                    
+                    try:
+                        # Rename the subfolder
+                        os.rename(item_path, new_item_path)
+                        print(f"Subfolder '{item}' renamed to '{new_folder_name}' successfully.")
+                    except FileExistsError:
+                        print(f"A folder with the name '{new_folder_name}' already exists.")
+                    except OSError as e:
+                        print(f"Error occurred while renaming the subfolder '{item}': {e}")
+        else:
+            rename_folder(parent_folder_path, prefix)
+    else:
+        raise Exception("No parent folder")
+
+def rename_folder(folder_path: str, prefix: str):
+    # Replace 'folder_path' with the appropriate path to the folder you want to rename
+
+    # Replace 'prefix_' with the prefix you want to add
+    new_folder_name = prefix + os.path.basename(folder_path)
+
+    try:
+        # Rename the folder by adding the prefix
+        os.rename(folder_path, new_folder_name)
+        print(f"Folder renamed to '{new_folder_name}' successfully.")
+    except FileNotFoundError:
+        print(f"The folder '{folder_path}' was not found.")
+    except FileExistsError:
+        print(f"A folder with the name '{new_folder_name}' already exists.")
+    except OSError as e:
+        print(f"Error occurred while renaming the folder: {e}")
+
+
 options = get_options()
 folder_prefix = "./"
 parent_folder = "input"
-prefix = None
-# does_have_subfolders = are_there_sub_folders(folder_prefix + parent_folder)
+does_have_subfolders = are_there_sub_folders(folder_prefix + parent_folder)
 
-# if prefix is not None:
-#     rename_folders(folder_prefix + parent_folder, prefix)
-#     parent_folder =  prefix + parent_folder if does_have_subfolders is False else parent_folder
+prefix = None
+try:
+    prefix = options["baseOptions"]["addVolumePrefix"]
+except:
+    pass
+if prefix is not None:
+    rename_folders(folder_prefix + parent_folder, prefix)
+    parent_folder =  prefix + parent_folder if does_have_subfolders is False else parent_folder
 zip_folders(folder_prefix + parent_folder)
-run_kcc_script_on_input(folder_prefix + parent_folder)
+run_kcc_script_on_input(folder_prefix + parent_folder, options)
 
 

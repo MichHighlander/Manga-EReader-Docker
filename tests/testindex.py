@@ -110,13 +110,59 @@ def run_second_script():
     except subprocess.CalledProcessError as e:
         print("Error occurred while running the script:", e)
 
-folder_prefix = "./"
-parent_folder = "folderparent"
-prefix = None
-does_have_subfolders = are_there_sub_folders(folder_prefix + parent_folder)
+def get_kcc_command_from_config(config: dict):
+    command = ['python','./kcc/kcc-c2e.py']
+    if 'kccOptions' in config:
+       for key in config['kccOptions']:
+        if config['kccOptions'][key] is not False and config['kccOptions'][key] is not None:
+            command.append(key)
+            if config['kccOptions'][key] is not True:
+                command.append(config['kccOptions'][key])
+    return command
 
-if prefix is not None:
-    rename_folders(folder_prefix + parent_folder, prefix)
-    parent_folder =  prefix + parent_folder if does_have_subfolders is False else parent_folder
-zip_folders(folder_prefix + parent_folder)
-run_second_script()
+# folder_prefix = "./"
+# parent_folder = "folderparent"
+# prefix = None
+# does_have_subfolders = are_there_sub_folders(folder_prefix + parent_folder)
+
+# if prefix is not None:
+#     rename_folders(folder_prefix + parent_folder, prefix)
+#     parent_folder =  prefix + parent_folder if does_have_subfolders is False else parent_folder
+# zip_folders(folder_prefix + parent_folder)
+# run_second_script()
+
+options = {
+    "baseOptions": {
+        "addVolumePrefix": "Golden Kamui "
+    },
+    "kccOptions": {
+        "--profile": "KPW5",
+        "--manga-style": True,
+        "--hq": True,
+        "--two-panel": False,
+        "--webtoon": False,
+        "--targetsize": None,
+        "--noprocessing": False,
+        "--upscale": False,
+        "--stretch": False,
+        "--splitter": None,
+        "--gamma": None,
+        "--cropping": None,
+        "--croppingpower": None,
+        "--croppingminimum": None,
+        "--blackborders": False,
+        "--whiteborders": False,
+        "--forcecolor": False,
+        "--forcepng": False,
+        "--mozjpeg": False,
+        "--maximizestrips": False,
+        "--delete": False,
+        "--output": None,
+        "--title": None,
+        "--format": None,
+        "--batchsplit": None
+    }
+}
+
+command = get_kcc_command_from_config(options)
+print(command)
