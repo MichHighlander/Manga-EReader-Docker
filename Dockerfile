@@ -4,10 +4,10 @@ FROM python:3.8
 WORKDIR /app
 
 # Copy your Python script into the container
-COPY kcc-master/ /app/kcc/
-COPY kindlegen /app/
-COPY index.py /app/
-COPY base_options.json /app/options.json
+COPY deploy/kcc-master/ /app/kcc/
+COPY deploy/kindlegen /app/
+COPY deploy/index.py /app/
+COPY deploy/base_options.json /app/options.json
 
 RUN mkdir input
 #Installing KindleGen
