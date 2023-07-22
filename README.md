@@ -3,39 +3,40 @@
 
 ## Optional:
 Create a options json in this format
-{
-    "baseOptions": {
-        "addVolumePrefix": null //Add prefix to volumes
-    },
-    "kccOptions": {
-        "--profile": null,
-        "--manga-style": false,
-        "--hq": false,
-        "--two-panel": false,
-        "--webtoon": false,
-        "--targetsize": null,
-        "--noprocessing": false,
-        "--upscale": false,
-        "--stretch": false,
-        "--splitter": null,
-        "--gamma": null,
-        "--cropping": null,
-        "--croppingpower": null,
-        "--croppingminimum": null,
-        "--blackborders": false,
-        "--whiteborders": false,
-        "--forcecolor": false,
-        "--forcepng": false,
-        "--mozjpeg": false,
-        "--maximizestrips": false,
-        "--delete": false,
-        "--output": null,
-        "--title": null,
-        "--format": null,
-        "--batchsplit": null
-    }
-}
-
+```
+  {
+      "baseOptions": {
+          "addVolumePrefix": null //Add prefix to volumes
+      },
+      "kccOptions": {
+          "--profile": null,
+          "--manga-style": false,
+          "--hq": false,
+          "--two-panel": false,
+          "--webtoon": false,
+          "--targetsize": null,
+          "--noprocessing": false,
+          "--upscale": false,
+          "--stretch": false,
+          "--splitter": null,
+          "--gamma": null,
+          "--cropping": null,
+          "--croppingpower": null,
+          "--croppingminimum": null,
+          "--blackborders": false,
+          "--whiteborders": false,
+          "--forcecolor": false,
+          "--forcepng": false,
+          "--mozjpeg": false,
+          "--maximizestrips": false,
+          "--delete": false,
+          "--output": null,
+          "--title": null,
+          "--format": null,
+          "--batchsplit": null
+      }
+  }
+```
 ### KCC options:
 ```
 Profiles:
