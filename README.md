@@ -5,7 +5,7 @@
 https://github.com/ciromattia/kcc
 
 ## Optional:
-Create a options json in this format
+Create a options json in this format (Optins with a boolean is without payload to the options and options with null have payload)
 ```
   {
       "baseOptions": {
