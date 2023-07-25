@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import subprocess
 import zipfile
 
@@ -182,8 +183,9 @@ def send_file_to_kindle(file_path: str):
     try:
         print("send_file_to_kindle: ", file_path)
         
-        # Convert the .mobi file to Kindle format (AZW3)
-        subprocess.run(['ebook-convert', file_path, "./output/" + os.path.basename(file_path)])
+        # Convert the .mobi file to Kindle format (AZW3)\
+        shutil.move(file_path, "./output/" + os.path.basename(file_path))
+        # subprocess.run(['ebook-convert', file_path, "./output/" + os.path.basename(file_path)])
         print(f'Successfully sent {file_path} to Kindle!')
     except subprocess.CalledProcessError as e:
         print(f'Error sending {file_path} to Kindle:', e)
