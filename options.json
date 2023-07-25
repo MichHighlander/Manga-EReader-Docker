@@ -1,6 +1,6 @@
 {
     "baseOptions": {
-        "addVolumePrefix": "Golden Kamui "
+        "addVolumePrefix": null
     },
     "kccOptions": {
         "--profile": "KPW5",

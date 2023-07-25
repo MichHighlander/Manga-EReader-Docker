@@ -30,6 +30,7 @@ def zip_folder(folder_path):
             for file in files:
                 file_path = os.path.join(root, file)
                 zipf.write(file_path, os.path.relpath(file_path, folder_path))
+                print("Finished zipping ", folder_path + ".zip")
 
 def are_there_sub_folders(parent_folder_path: str):
     # Check if the parent folder exists
@@ -108,13 +109,14 @@ def run_kcc_script_on_input(parent_folder, config: dict):
     else:
         raise Exception("No parent folder")
       
-def run_kcc_script(item, command: list):
+def run_kcc_script(item: str, command: list):
     # Replace 'python_script_to_run.py' with the name of the script you want to run
     # script_to_run = './kcc/kcc-c2e.py'
     command_and_item = command.copy()
     command_and_item.append("./input/" + item)
     try:
         subprocess.run(command_and_item)
+        send_file_to_kindle("./input/" + item.replace(".zip",".mobi"))
     except subprocess.CalledProcessError as e:
         print("Error occurred while running the script:", e)
 
@@ -176,6 +178,15 @@ def rename_folder(folder_path: str, prefix: str):
     except OSError as e:
         print(f"Error occurred while renaming the folder: {e}")
 
+def send_file_to_kindle(file_path: str):
+    try:
+        print("send_file_to_kindle: ", file_path)
+        
+        # Convert the .mobi file to Kindle format (AZW3)
+        subprocess.run(['ebook-convert', file_path, "./output/" + os.path.basename(file_path)])
+        print(f'Successfully sent {file_path} to Kindle!')
+    except subprocess.CalledProcessError as e:
+        print(f'Error sending {file_path} to Kindle:', e)
 
 options = get_options()
 folder_prefix = "./"

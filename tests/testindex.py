@@ -79,10 +79,6 @@ def zip_folder(folder_path):
                 file_path = os.path.join(root, file)
                 zipf.write(file_path, os.path.relpath(file_path, folder_path))
 
-# Replace 'folder_to_zip' with the path of the folder you want to zip
-folder_to_zip = './folderparent'
-
-# Replace 'output_zip_file.zip' with the name of the output ZIP file
 
 def zip_folders(parent_folder_path: str):
     # Check if the parent folder exists
