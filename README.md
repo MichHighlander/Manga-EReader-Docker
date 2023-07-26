@@ -2,10 +2,10 @@
 1. Install docker
 
 ## Sources
-for KCC Options read:
+For KCC Options read:
 https://github.com/ciromattia/kcc
 
-for Manga Downloading Options - Manga Link:
+For Manga Downloading Options - Manga Link:
 https://manga-py.github.io/manga-py/#resources-list
 Recommended sites:
 - https://manganato.com/
@@ -78,7 +78,11 @@ docker build -t <container_name> .
 ```
 
 2.
-*Disclamer*: if <local_input_folder> is given and is not empty, the code will ignore "mangaDownloadingOptions" and will not download new manga.
+  *Disclamer*: If <local_input_folder> is given and is not empty, the code will ignore "mangaDownloadingOptions" and will not download new manga.
 ```
 docker run -v <options_file_path>.json:/app/options.json -v <local_input_folder>:/app/input <kindle_dir>/documents/:/app/output <container_name>
 ```
+
+## CREDITS
+- manga_py - For downloading manga: (https://github.com/manga-py/manga-py)
+- KCC - For converting the manga into mobi files: (https://github.com/ciromattia/kcc)
