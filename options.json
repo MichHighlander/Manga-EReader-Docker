@@ -2,6 +2,11 @@
     "baseOptions": {
         "addVolumePrefix": null
     },
+    "mangaDownloadingOptions": {
+        "--manga_link":"https://www.mangatown.com/manga/fairy_tail/",
+        "--series_name": "Fairy Tail",
+        "--volumes_chapter_list_amount": [2]
+    },
     "kccOptions": {
         "--profile": "KPW5",
         "--manga-style": true,

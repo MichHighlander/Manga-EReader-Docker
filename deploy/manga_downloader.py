@@ -1,7 +1,18 @@
+import argparse
+import ast
 import os
 import subprocess
 import zipfile
 
+class ParseListAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        try:
+            # Convert the string representation of the list to an actual list
+            parsed_list = ast.literal_eval(values)
+            setattr(namespace, self.dest, parsed_list)
+        except (ValueError, SyntaxError) as e:
+            raise argparse.ArgumentTypeError(f"Invalid list format for {self.dest}: {values}")
+        
 def download_manga(manga_link: str, series_name: str, volumes_chapter_list_amount: list, start_from_chapter = 1, start_from_volume = 1):
     try:
         # Use ebook-convert to change the author
@@ -53,13 +64,28 @@ def unzip(zip_file_path: str, volumes_chapter_list_amount_index: int):
         zip_ref.extractall("./input/" + os.path.basename(dir_name) + " Vol." + str(volumes_chapter_list_amount_index) + "/" + base_name)
     os.remove(zip_file_path)
 
-# Example usage:
 if __name__ == "__main__":
-    mangaLink = "https://www.mangatown.com/manga/shingeki_no_kyojin/"
-    series_name = "Attack On Titan"
-    volumes_chapter_list_amount = [2, 2]
-    start_from_chapter = 3
-    start_from_volume = 2
-    # download_manga(mangaLink, series_name, volumes_chapter_list_amount, start_from_chapter, start_from_volume)
-    download_manga(mangaLink, series_name, volumes_chapter_list_amount,start_from_chapter, start_from_volume)
+    # Create an ArgumentParser object
+    parser = argparse.ArgumentParser(description='A script with command-line arguments.')
+
+    parser.add_argument('--manga_link', type=str, required=True, help="A link to the manga's url")
+    parser.add_argument('--series_name', type=str, required=True, help='The name of the series')
+    parser.add_argument('--volumes_chapter_list_amount', type=str, required=True, action=ParseListAction, help='A list of integers that represent how much chapters are in each volume')
+    parser.add_argument('--start_from_chapter', type=int, help='A chapter to start from, included. (Example: 3 will download from chapter 3 and beyond). Default: 1', default=1)
+    parser.add_argument('--start_from_volume', type=int,help='The number of volume to start counting from. Default: 1', default=1)
+
+    # Parse the command-line arguments
+    args = parser.parse_args()
+
+    # Access the values of the arguments
+    manga_link = args.manga_link
+    series_name = args.series_name
+    volumes_chapter_list_amount = args.volumes_chapter_list_amount
+    start_from_chapter = args.start_from_chapter
+    start_from_volume = args.start_from_volume
+
+    if len(volumes_chapter_list_amount) == 0:
+        raise Exception("--volumes_chapter_list_amount is Empty!")
+
+    download_manga(manga_link, series_name, volumes_chapter_list_amount,start_from_chapter, start_from_volume)
 

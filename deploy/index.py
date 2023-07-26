@@ -190,12 +190,23 @@ def send_file_to_kindle(file_path: str):
     except subprocess.CalledProcessError as e:
         print(f'Error sending {file_path} to Kindle:', e)
 
-def run_manga_downloader():
+
+def get_manga_downloader_command_from_config(mangaDownloadingOptions: dict):
+    command = ['python','./manga_downloader.py']
+    for key in mangaDownloadingOptions:
+        if mangaDownloadingOptions[key] is not False and mangaDownloadingOptions[key] is not None:
+            command.append(key)
+            if mangaDownloadingOptions[key] is not True:
+                command.append(str(mangaDownloadingOptions[key]))
+    return command
+
+def run_manga_downloader(mangaDownloadingOptions):
     try:
-        subprocess.run(["python", "./manga_downloader.py"])
+        command = get_manga_downloader_command_from_config(mangaDownloadingOptions)
+        subprocess.run(command)
     except Exception as e:
         print(f'run_manga_downloader Error {e}')
-    
+
 options = get_options()
 folder_prefix = "./"
 parent_folder = "input"
@@ -210,8 +221,8 @@ if prefix is not None:
     rename_folders(folder_prefix + parent_folder, prefix)
     parent_folder =  prefix + parent_folder if does_have_subfolders is False else parent_folder
 
-if does_have_subfolders is False:
-    run_manga_downloader()
+if does_have_subfolders is False and "mangaDownloadingOptions" in options:
+    run_manga_downloader(options["mangaDownloadingOptions"])
 print("after manga downloader")
 zip_folders(folder_prefix + parent_folder)
 run_kcc_script_on_input(folder_prefix + parent_folder, options)
