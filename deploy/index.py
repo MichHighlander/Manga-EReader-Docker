@@ -31,7 +31,7 @@ def zip_folder(folder_path):
             for file in files:
                 file_path = os.path.join(root, file)
                 zipf.write(file_path, os.path.relpath(file_path, folder_path))
-                print("Finished zipping ", folder_path + ".zip")
+    print("Finished zipping ", folder_path + ".zip")
 
 def are_there_sub_folders(parent_folder_path: str):
     # Check if the parent folder exists
@@ -190,6 +190,12 @@ def send_file_to_kindle(file_path: str):
     except subprocess.CalledProcessError as e:
         print(f'Error sending {file_path} to Kindle:', e)
 
+def run_manga_downloader():
+    try:
+        subprocess.run(["python", "./manga_downloader.py"])
+    except Exception as e:
+        print(f'run_manga_downloader Error {e}')
+    
 options = get_options()
 folder_prefix = "./"
 parent_folder = "input"
@@ -203,6 +209,10 @@ except:
 if prefix is not None:
     rename_folders(folder_prefix + parent_folder, prefix)
     parent_folder =  prefix + parent_folder if does_have_subfolders is False else parent_folder
+
+if does_have_subfolders is False:
+    run_manga_downloader()
+print("after manga downloader")
 zip_folders(folder_prefix + parent_folder)
 run_kcc_script_on_input(folder_prefix + parent_folder, options)
 

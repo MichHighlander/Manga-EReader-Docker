@@ -28,11 +28,15 @@ RUN pip install --use-pep517 mozjpeg-lossless-optimization>=1.1.2
 #Changing requirements
 COPY deploy/requirements.txt /app/kcc/requirements.txt
 
-#installing requirements
+#Installing requirements
 RUN pip install -r /app/kcc/requirements.txt
 
-#Copy python code into docker
-COPY deploy/index.py /app/
+#Manga downloader
+RUN git clone https://github.com/manga-py/manga-py.git
+RUN pip install -r /app/manga-py/requirements.txt
 
+#Copy python code into docker
+COPY deploy/manga_downloader.py /app/
+COPY deploy/index.py /app/
 # CMD python ./kcc/kcc-c2e.py -p K1 ./input/input.zip
 CMD python index.py
