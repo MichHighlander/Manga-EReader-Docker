@@ -28,7 +28,7 @@ Example - Download volume 2 and 3 of "Shingeki no Kyojin":
       "--series_name": Shingeki no Kyojin
       "--volumes_chapter_list_amount": [6,4] //In the volume wikipedia we see that volume 2 there are 5 chapters but in MangaTown we can see that there is a half chapter 9.5, so to also include it we need to add 1 to volume 2 chapter list.
       "--start_from_chapter": 6 //In the volume wikipedia it is written that volume 2 starts at chapter 5 but at MangaTown we can see that there is a "one shoot" at the start and i dont want it so i added 1.
-      "--start_from_volume': 2
+      "--start_from_volume": 2
   },
 ```
 
