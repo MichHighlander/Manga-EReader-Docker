@@ -1,31 +1,9 @@
-import json
 import os
-import shutil
 import subprocess
 
-from Utils.utils import Utils
 from Utils.folder_utils import FolderUtils
-
-def get_options():
-    # Replace 'your_file.json' with the actual path to your JSON file
-    file_path = '/app/options.json'
-
-    try:
-        # Step 1: Opening the JSON file in read mode
-        with open(file_path, 'r') as file:
-            
-            # Step 2: Loading the JSON content into a Python dictionary
-            json_object = json.load(file)
-            
-            # Step 3: Printing the JSON object (Python dictionary)
-            print(json_object)
-            return json_object
-    except FileNotFoundError:
-        print(f"The file '{file_path}' was not found.")
-    except json.JSONDecodeError:
-        print(f"Error occurred while parsing the JSON data in file '{file_path}'.")
-    except IOError:
-        print(f"Error occurred while reading the file '{file_path}'.")
+from Utils.config_utils import ConfigUtils
+from Utils.zip_utils import ZipUtils
     
 def zip_all_sub_folders(parent_folder_path: str):
     # Check if the parent folder exists
@@ -37,7 +15,7 @@ def zip_all_sub_folders(parent_folder_path: str):
         for item in items_in_parent_folder:
             item_path = os.path.join(parent_folder_path, item)
             if os.path.isdir(item_path):
-                Utils.zip_folder(item_path)
+                ZipUtils.zip_folder(item_path)
     else:
         raise Exception("No parent folder")
 
@@ -46,10 +24,10 @@ def run_kcc_script_on_input(parent_folder, config: dict):
         # Get a list of all items (files and subfolders) in the parent folder
         items_in_parent_folder = os.listdir(parent_folder)
         
-        command = get_kcc_command_from_config(config)
+        command = ConfigUtils.get_kcc_command_from_config(config)
         # Loop through the items in the parent folder
         for item in items_in_parent_folder:
-            if Utils.is_zip_file(item):
+            if ZipUtils.is_zip_file(item):
                 print("item",item)
                 run_kcc_script(item, command)
     else:
@@ -68,16 +46,6 @@ def run_kcc_script(item: str, command: list):
         print("Error occurred while running the script:", e)
 
 
-def get_kcc_command_from_config(config: dict):
-    command = ['python','./kcc/kcc-c2e.py']
-    if 'kccOptions' in config:
-       for key in config['kccOptions']:
-        if config['kccOptions'][key] is not False and config['kccOptions'][key] is not None:
-            command.append(key)
-            if config['kccOptions'][key] is not True:
-                command.append(config['kccOptions'][key])
-    return command
-
 def rename_all_sub_folders(parent_folder_path: str, prefix: str):
     # Check if the parent folder exists
     if os.path.exists(parent_folder_path):
@@ -92,30 +60,22 @@ def rename_all_sub_folders(parent_folder_path: str, prefix: str):
     else:
         raise Exception("No parent folder")
 
-def get_manga_downloader_command_from_config(mangaDownloadingOptions: dict):
-    command = ['python','./manga_downloader.py']
-    for key in mangaDownloadingOptions:
-        if mangaDownloadingOptions[key] is not False and mangaDownloadingOptions[key] is not None:
-            command.append(key)
-            if mangaDownloadingOptions[key] is not True:
-                command.append(str(mangaDownloadingOptions[key]))
-    return command
-
 def run_manga_downloader(mangaDownloadingOptions):
     try:
-        command = get_manga_downloader_command_from_config(mangaDownloadingOptions)
+        command = ConfigUtils.get_manga_downloader_command_from_config(mangaDownloadingOptions)
         subprocess.run(command)
     except Exception as e:
         print(f'run_manga_downloader Error {e}')
 
-options = get_options()
+#Script start
+config = ConfigUtils.get_config_as_dict('/app/options.json')
 folder_prefix = "./"
 parent_folder = "input"
 does_have_subfolders = FolderUtils.are_there_sub_folders(folder_prefix + parent_folder)
 
 prefix = None
 try:
-    prefix = options["baseOptions"]["addVolumePrefix"]
+    prefix = config["baseOptions"]["addVolumePrefix"]
 except:
     pass
 
@@ -123,10 +83,10 @@ if prefix is not None:
     rename_all_sub_folders(folder_prefix + parent_folder, prefix)
     parent_folder =  prefix + parent_folder if does_have_subfolders is False else parent_folder
 
-if does_have_subfolders is False and "mangaDownloadingOptions" in options:
-    run_manga_downloader(options["mangaDownloadingOptions"])
+if does_have_subfolders is False and "mangaDownloadingOptions" in config:
+    run_manga_downloader(config["mangaDownloadingOptions"])
 print("after manga downloader")
 zip_all_sub_folders(folder_prefix + parent_folder)
-run_kcc_script_on_input(folder_prefix + parent_folder, options)
+run_kcc_script_on_input(folder_prefix + parent_folder, config)
 
 

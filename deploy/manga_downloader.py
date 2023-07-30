@@ -4,6 +4,7 @@ import os
 import subprocess
 
 from Utils.utils import Utils
+from Utils.zip_utils import ZipUtils
 
 class ParseListAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
@@ -44,7 +45,7 @@ def unzuip_all(folder_path:str, start_from_volume: int, volumes_chapter_list_amo
         if os.path.isfile(item_path):
             dir_name = os.path.dirname(item_path)
             unzip_destination: str = "./input/" + os.path.basename(dir_name) + " Vol." + str(volumes_chapter_list_amount_index + start_from_volume) + "/"
-            Utils.unzip(item_path, unzip_destination, True)
+            ZipUtils.unzip(item_path, unzip_destination, True)
             print(f"Unzip File: {item_path}")
             chapter_count = chapter_count + 1
         elif os.path.isdir(item_path):
