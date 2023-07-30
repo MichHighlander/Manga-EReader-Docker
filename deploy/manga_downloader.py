@@ -2,9 +2,8 @@ import argparse
 import ast
 import os
 import subprocess
-import zipfile
 
-from utils import Utils
+from Utils.utils import Utils
 
 class ParseListAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
