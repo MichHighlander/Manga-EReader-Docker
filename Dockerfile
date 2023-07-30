@@ -36,6 +36,7 @@ RUN git clone https://github.com/manga-py/manga-py.git
 RUN pip install -r /app/manga-py/requirements.txt
 
 #Copy python code into docker
+COPY deploy/utils.py /app/
 COPY deploy/manga_downloader.py /app/
 COPY deploy/index.py /app/
 # CMD python ./kcc/kcc-c2e.py -p K1 ./input/input.zip
