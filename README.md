@@ -34,8 +34,8 @@ Example - Download volume 2 and 3 of "Shingeki no Kyojin":
 
 ## Config:
 Create an options json in this format.
--Options with a boolean are options without payload. (Example: "--manga-style": true, will result in --manga-style being implemented in the run command)
--Options with null have payload. (Example: "--profile": "PROFILE", will result in --profile being implemented in the run command with its payload)
+- Options with a boolean are options without payload. (Example: "--manga-style": true, will result in --manga-style being implemented in the run command)
+- Options with null have payload. (Example: "--profile": "PROFILE", will result in --profile being implemented in the run command with its payload)
 
 ```
   {
@@ -80,7 +80,9 @@ Create an options json in this format.
 docker build -t <container_name> . 
 ```
 2.
+```
 Create a options.json file, see insturction above.
+```
 3.
   *Disclamer*: If <local_input_folder> is given and is not empty, the code will ignore "mangaDownloadingOptions" and will not download new manga.
 ```
