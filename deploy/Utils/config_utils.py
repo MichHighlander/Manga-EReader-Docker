@@ -11,7 +11,7 @@ class ConfigUtils:
                 json_object = json.load(file)
                 
                 # Step 3: Printing the JSON object (Python dictionary)
-                print(json_object)
+                # print(json_object)
                 return json_object
         except FileNotFoundError:
             print(f"The file '{conifg_path}' was not found.")
@@ -40,3 +40,19 @@ class ConfigUtils:
                     if config['kccOptions'][key] is not True:
                         command.append(config['kccOptions'][key])
         return command
+    
+    @staticmethod
+    def find_new_file_created_by_kcc(zip_base_name: str, config: dict):
+        try:
+            format: str = None
+
+            format = config.get("kccOptions").get("--format")
+            if format is None:
+                format = config.get("kccOptions").get("-f")
+            
+            if format is None or format == "Auto" or format == "MOBI+EPUB":
+                return zip_base_name.replace(".zip",".mobi")
+            
+            return zip_base_name.replace(".zip","."+ format.lower())
+        except:
+            return zip_base_name.replace(".zip",".mobi")

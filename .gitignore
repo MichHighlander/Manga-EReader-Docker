@@ -1,3 +1,4 @@
 testing/
 options.json
 manga-py/
+deploy/Utils/__pycache__/

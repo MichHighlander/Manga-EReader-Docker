@@ -29,22 +29,21 @@ def run_kcc_script_on_input(parent_folder, config: dict):
         for item in items_in_parent_folder:
             if ZipUtils.is_zip_file(item):
                 print("item",item)
-                run_kcc_script(item, command)
+                run_kcc_script(item, command, config)
     else:
         raise Exception("No parent folder")
       
-def run_kcc_script(item: str, command: list):
+def run_kcc_script(item: str, command: list, config: dict):
     command_and_item = command.copy()
     command_and_item.append("./input/" + item)
     try:
         subprocess.run(command_and_item)
         #Moving mobi file to output folder (Kindle)
-        mobi_file = item.replace(".zip",".mobi")
+        mobi_file = ConfigUtils.find_new_file_created_by_kcc(item, config)
         destination = "./output/" + mobi_file
         FolderUtils.move_file("./input/" + mobi_file, destination)
     except subprocess.CalledProcessError as e:
         print("Error occurred while running the script:", e)
-
 
 def rename_all_sub_folders(parent_folder_path: str, prefix: str):
     # Check if the parent folder exists
