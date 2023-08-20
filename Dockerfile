@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.8-slim
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -17,6 +17,7 @@ RUN mv kindlegen /usr/local/bin/
 # Define the command to run your Python script
 RUN apt-get update && \
     apt-get upgrade -y && \
+    apt-get install -y pip && \
     apt-get install -y git && \
     apt-get install -y p7zip-full && \
     apt-get install -y calibre && \
