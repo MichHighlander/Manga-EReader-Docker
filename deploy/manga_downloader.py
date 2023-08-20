@@ -26,7 +26,7 @@ def download_manga(manga_link: str, series_name: str, volumes_chapter_list_amoun
         print(f'Error cdownload_manga: {e}')
 
 def unzuip_all(folder_path:str, start_from_volume: int, volumes_chapter_list_amount: list):
-    folder_items = os.listdir(folder_path)
+    folder_items = sorted(os.listdir(folder_path))
 
     # Loop through the items in the folder
     volumes_chapter_list_amount_index = 0
