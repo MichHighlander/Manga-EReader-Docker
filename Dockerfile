@@ -23,7 +23,7 @@ RUN apt-get update && \
     apt-get install -y calibre && \
     apt-get -y install cmake protobuf-compiler
 
-RUN git clone https://github.com/ciromattia/kcc.git
+RUN git clone -b v5.6.3 https://github.com/ciromattia/kcc.git
 RUN pip install --use-pep517 mozjpeg-lossless-optimization>=1.1.2
 
 #Changing requirements
